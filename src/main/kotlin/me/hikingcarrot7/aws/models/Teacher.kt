@@ -19,21 +19,27 @@ class Teacher {
 
   @Column
   @NotNull
-  @Min(1)
+  @Min(1, message = "El número del empleado debe ser mayor a 1")
   var employeeNumber = Long.MIN_VALUE
 
   @Column
   @NotNull
-  @Size(min = 5)
+  @Size(
+    min = 5,
+    message = "Los nombres deben tener un mínimo de 5 caracteres"
+  )
   lateinit var names: String
 
   @Column
   @NotNull
-  @Size(min = 5)
+  @Size(
+    min = 5,
+    message = "Los apellidos deben tener un mínimo de 5 caracteres"
+  )
   lateinit var surnames: String
 
   @Column
   @NotNull
-  @Min(1)
+  @Min(1, message = "El número de horas de clases debe ser mayor a 1")
   var classHours: Int = Int.MIN_VALUE
 }

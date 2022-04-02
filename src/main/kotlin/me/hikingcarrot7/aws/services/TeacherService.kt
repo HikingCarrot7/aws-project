@@ -16,7 +16,7 @@ class TeacherService constructor(val teacherRepository: TeacherRepository) {
   fun getTeacherById(teacherId: Long): Teacher {
     return teacherRepository
       .findByIdOrNull(teacherId)
-      ?: throw TeacherNotFoundException()
+      ?: throw TeacherNotFoundException(teacherId)
   }
 
   fun saveTeacher(teacher: Teacher): Teacher {

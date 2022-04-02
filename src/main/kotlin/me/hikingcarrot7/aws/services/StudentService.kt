@@ -18,7 +18,7 @@ class StudentService constructor(
   fun getStudentById(studentId: Long): Student {
     return studentRepository
       .findByIdOrNull(studentId)
-      ?: throw StudentNotFoundException()
+      ?: throw StudentNotFoundException(studentId)
   }
 
   fun saveStudent(student: Student): Student {

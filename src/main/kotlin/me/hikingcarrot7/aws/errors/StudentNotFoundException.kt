@@ -1,4 +1,8 @@
 package me.hikingcarrot7.aws.errors
 
-class StudentNotFoundException : RuntimeException() {
-}
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ResponseStatus
+
+@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Student not found")
+class StudentNotFoundException(studentId: Long) :
+  RuntimeException("Student with id: $studentId doesn't exists!")
