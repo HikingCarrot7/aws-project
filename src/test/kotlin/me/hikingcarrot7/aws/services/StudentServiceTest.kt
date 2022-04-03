@@ -5,18 +5,17 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
 import io.mockk.every
+import io.mockk.slot
 import io.mockk.verify
 import me.hikingcarrot7.aws.errors.StudentNotFoundException
 import me.hikingcarrot7.aws.models.Student
 import me.hikingcarrot7.aws.repositories.StudentRepository
 import org.junit.jupiter.api.assertThrows
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 
 @SpringBootTest
-@AutoConfigureWebTestClient
-class StudentServiceTest(
+internal class StudentServiceTest(
   @MockkBean private val studentRepository: StudentRepository
 ) : StringSpec() {
   private lateinit var underTest: StudentService
@@ -61,6 +60,16 @@ class StudentServiceTest(
       assertThrows<StudentNotFoundException> {
         underTest.getStudentById(studentId)
       }
+    }
+
+    "should save student" {
+      val newStudent = Student(3, "Eusebio", "Do Santos", "17005634", 84.3)
+      val studentSlot = slot<Student>()
+      every { studentRepository.save(capture(studentSlot)) } returns newStudent
+
+      underTest.saveStudent(newStudent)
+
+      studentSlot.captured shouldBe newStudent
     }
 
     "should update student" {
