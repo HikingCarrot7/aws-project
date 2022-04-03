@@ -8,10 +8,10 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "students")
-class Student {
+class Student() {
   @Id
   @GeneratedValue
-  val id = Long.MIN_VALUE
+  var id = Long.MIN_VALUE
 
   @Column
   @NotNull
@@ -37,5 +37,19 @@ class Student {
   @NotNull
   @DecimalMin("0.0", message = "El promedio debe ser mayor a 0")
   @DecimalMax("100.0", message = "El promedio debe ser menor que 100")
-  var average = Double.MIN_VALUE
+  var gradePointAverage = Double.MIN_VALUE
+
+  constructor(
+    id: Long,
+    names: String,
+    surnames: String,
+    enrolment: String,
+    gradePointAverage: Double
+  ) : this() {
+    this.id = id
+    this.names = names
+    this.surnames = surnames
+    this.enrolment = enrolment
+    this.gradePointAverage = gradePointAverage
+  }
 }

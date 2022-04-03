@@ -8,6 +8,7 @@ class AwsApplicationTests {
 
   @Test
   fun contextLoads() {
+    println("Hello world!")
   }
 
 }

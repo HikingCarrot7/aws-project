@@ -30,7 +30,7 @@ class StudentService constructor(
     oldStudent.names = newStudent.names
     oldStudent.surnames = newStudent.surnames
     oldStudent.enrolment = newStudent.enrolment
-    oldStudent.average = newStudent.average
+    oldStudent.gradePointAverage = newStudent.gradePointAverage
     return studentRepository.save(oldStudent)
   }
 
