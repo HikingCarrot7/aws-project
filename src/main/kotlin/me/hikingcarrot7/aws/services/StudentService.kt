@@ -1,8 +1,8 @@
 package me.hikingcarrot7.aws.services
 
+import me.hikingcarrot7.aws.errors.StudentNotFoundException
 import me.hikingcarrot7.aws.models.Student
 import me.hikingcarrot7.aws.repositories.StudentRepository
-import me.hikingcarrot7.aws.errors.StudentNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -25,12 +25,12 @@ class StudentService constructor(
     return studentRepository.save(student)
   }
 
-  fun updateStudent(studentId: Long, newStudent: Student): Student {
+  fun updateStudent(studentId: Long, updatedStudent: Student): Student {
     val oldStudent = getStudentById(studentId)
-    oldStudent.names = newStudent.names
-    oldStudent.surnames = newStudent.surnames
-    oldStudent.enrolment = newStudent.enrolment
-    oldStudent.gradePointAverage = newStudent.gradePointAverage
+    oldStudent.names = updatedStudent.names
+    oldStudent.surnames = updatedStudent.surnames
+    oldStudent.enrolment = updatedStudent.enrolment
+    oldStudent.gradePointAverage = updatedStudent.gradePointAverage
     return studentRepository.save(oldStudent)
   }
 

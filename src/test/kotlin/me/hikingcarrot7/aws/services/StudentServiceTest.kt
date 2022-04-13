@@ -1,106 +1,132 @@
 package me.hikingcarrot7.aws.services
 
-import com.ninjasquad.springmockk.MockkBean
-import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.extensions.spring.SpringExtension
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.slot
-import io.mockk.verify
 import me.hikingcarrot7.aws.errors.StudentNotFoundException
 import me.hikingcarrot7.aws.models.Student
 import me.hikingcarrot7.aws.repositories.StudentRepository
 import org.junit.jupiter.api.assertThrows
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.repository.findByIdOrNull
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
-@SpringBootTest
+@DataJpaTest
 internal class StudentServiceTest(
-  @MockkBean private val studentRepository: StudentRepository
-) : StringSpec() {
+  private val studentRepository: StudentRepository
+) : ShouldSpec() {
   private lateinit var underTest: StudentService
-  private val studentsWithinDatabase = arrayListOf<Student>()
+  private var studentsWithinDatabase = listOf(
+    Student(1, "Nicolás", "Canul", "15001169", 77.7),
+    Student(2, "Fernando", "Uicab", "18341599", 89.5)
+  )
 
   override fun extensions() = listOf(SpringExtension)
 
   init {
     beforeEach {
+      studentRepository.deleteAll()
+      studentsWithinDatabase = studentRepository.saveAll(studentsWithinDatabase)
       underTest = StudentService(studentRepository)
-      studentsWithinDatabase.clear()
-      studentsWithinDatabase.addAll(
-        listOf(
-          Student(1, "Nicolás", "Canul", "15001169", 77.7),
-          Student(2, "Fernando", "Uicab", "18341599", 89.5)
-        )
-      )
     }
 
-    "should return all students within database" {
-      val expectedStudents = studentsWithinDatabase
-      every { studentRepository.findAll() } returns expectedStudents
+    context("#getAllStudents") {
+      should("return all students within database") {
+        val students = underTest.getAllStudents()
 
-      val students = underTest.getAllStudents()
-
-      students shouldBe expectedStudents
-    }
-
-    "should return student by id" {
-      val expectedStudent = studentsWithinDatabase.last()
-      every { studentRepository.findByIdOrNull(any()) } returns expectedStudent
-
-      val student = underTest.getStudentById(2)
-
-      student shouldBe expectedStudent
-    }
-
-    "should throw exception if student is not found" {
-      val studentId = 5L
-      every { studentRepository.findByIdOrNull(any()) } returns null
-
-      assertThrows<StudentNotFoundException> {
-        underTest.getStudentById(studentId)
+        students shouldContainExactly studentsWithinDatabase
       }
     }
 
-    "should save student" {
-      val newStudent = Student(3, "Eusebio", "Do Santos", "17005634", 84.3)
-      val studentSlot = slot<Student>()
-      every { studentRepository.save(capture(studentSlot)) } returns newStudent
+    context("#getStudentById") {
+      should("return student by id") {
+        val expectedStudent = studentsWithinDatabase.last()
 
-      underTest.saveStudent(newStudent)
+        val student = underTest.getStudentById(expectedStudent.id)
 
-      studentSlot.captured shouldBe newStudent
+        student shouldBe expectedStudent
+      }
+
+      should("throw exception if student is not found") {
+        val studentId = Long.MAX_VALUE
+
+        assertThrows<StudentNotFoundException> {
+          underTest.getStudentById(studentId)
+        }
+      }
     }
 
-    "should update student" {
-      val oldStudent = studentsWithinDatabase.last()
-      val oldStudentId = oldStudent.id
-      val newStudent = Student(
-        id = oldStudentId,
-        names = "Nicolás",
-        surnames = "Canul Ibarra",
-        enrolment = "15001169",
-        gradePointAverage = 80.3
-      )
-      every { studentRepository.findByIdOrNull(oldStudentId) } returns oldStudent
-      every { studentRepository.save(oldStudent) } returns newStudent
+    context("#saveStudent") {
+      should("return saved student with a valid id and original fields") {
+        val newStudent = Student(
+          id = Long.MIN_VALUE,
+          names = "Eusebio",
+          surnames = "Do Santos",
+          enrolment = "17005634",
+          gradePointAverage = 78.3
+        )
 
-      val updatedStudent = underTest.updateStudent(oldStudentId, newStudent)
+        val savedStudent = underTest.saveStudent(newStudent)
 
-      updatedStudent shouldBe newStudent
+        savedStudent.id shouldBeGreaterThan 0L
+        savedStudent.names shouldBe newStudent.names
+        savedStudent.surnames shouldBe newStudent.surnames
+      }
     }
 
-    "should delete student from database" {
-      val studentToDelete = studentsWithinDatabase.first()
-      val studentToDeleteId = studentToDelete.id
-      every { studentRepository.findByIdOrNull(studentToDeleteId) } returns studentToDelete
-      every { studentRepository.delete(studentToDelete) } returns Unit
+    context("#updateStudent") {
+      should("return updated surnames and grade point average") {
+        val oldStudent = studentsWithinDatabase.last()
+        val oldStudentId = oldStudent.id
+        val newStudent = Student(
+          id = oldStudentId,
+          names = "Nicolás",
+          surnames = "Canul Ibarra",
+          enrolment = "15001169",
+          gradePointAverage = 80.3
+        )
 
-      val deletedStudent = underTest.deleteStudent(studentToDeleteId)
+        val updatedStudent = underTest.updateStudent(oldStudentId, newStudent)
 
-      verify(exactly = 1) { studentRepository.delete(studentToDelete) }
-      deletedStudent shouldBe studentToDelete
+        updatedStudent.surnames shouldBe newStudent.surnames
+        updatedStudent.gradePointAverage shouldBe newStudent.gradePointAverage
+      }
+
+      should("throw exception if student to update is not found") {
+        val updatedStudent = Student(
+          id = Long.MAX_VALUE,
+          names = "Eusebio",
+          surnames = "Do Santos",
+          enrolment = "15001189",
+          gradePointAverage = 89.34
+        )
+        val studentId = updatedStudent.id
+
+        assertThrows<StudentNotFoundException> {
+          underTest.updateStudent(studentId, updatedStudent)
+        }
+      }
     }
 
+    context("#deleteStudent") {
+      should("delete student from database") {
+        val totalStudents = studentRepository.count()
+        val studentToDelete = studentsWithinDatabase.first()
+        val studentToDeleteId = studentToDelete.id
+
+        val deletedStudent = underTest.deleteStudent(studentToDeleteId)
+
+        deletedStudent shouldBe studentToDelete
+        studentRepository.count() shouldBe totalStudents - 1
+      }
+
+      should("throw exception if student to delete is not found") {
+        val studentToDeleteId = Long.MAX_VALUE
+
+        assertThrows<StudentNotFoundException> {
+          underTest.deleteStudent(studentToDeleteId)
+        }
+      }
+    }
   }
 }

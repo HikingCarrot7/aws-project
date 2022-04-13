@@ -52,4 +52,29 @@ class Student() {
     this.enrolment = enrolment
     this.gradePointAverage = gradePointAverage
   }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as Student
+
+    if (id != other.id) return false
+    if (names != other.names) return false
+    if (surnames != other.surnames) return false
+    if (enrolment != other.enrolment) return false
+    if (gradePointAverage != other.gradePointAverage) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = id.hashCode()
+    result = 31 * result + names.hashCode()
+    result = 31 * result + surnames.hashCode()
+    result = 31 * result + enrolment.hashCode()
+    result = 31 * result + gradePointAverage.hashCode()
+    return result
+  }
+
 }
