@@ -47,5 +47,4 @@ class StudentController constructor(val studentService: StudentService) {
     val deletedStudent = studentService.deleteStudent(studentId)
     return ResponseEntity.ok(deletedStudent)
   }
-
 }

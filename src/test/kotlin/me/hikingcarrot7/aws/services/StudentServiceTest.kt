@@ -3,7 +3,6 @@ package me.hikingcarrot7.aws.services
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import me.hikingcarrot7.aws.models.Student
 import me.hikingcarrot7.aws.repositories.StudentRepository
@@ -59,18 +58,17 @@ internal class StudentServiceTest(
     context("#saveStudent") {
       should("return saved student with a valid id and original fields") {
         val newStudent = Student(
-          id = Long.MIN_VALUE,
-          names = "Eusebio",
-          surnames = "Do Santos",
-          enrolment = "17005634",
-          gradePointAverage = 78.3
+          id = 3,
+          nombres = "Eusebio",
+          apellidos = "Do Santos",
+          matricula = "17005634",
+          promedio = 78.3
         )
 
         val savedStudent = underTest.saveStudent(newStudent)
 
-        savedStudent.id shouldBeGreaterThan 0L
-        savedStudent.names shouldBe newStudent.names
-        savedStudent.surnames shouldBe newStudent.surnames
+        savedStudent.nombres shouldBe newStudent.nombres
+        savedStudent.apellidos shouldBe newStudent.apellidos
       }
     }
 
@@ -80,25 +78,25 @@ internal class StudentServiceTest(
         val oldStudentId = oldStudent.id
         val newStudent = Student(
           id = oldStudentId,
-          names = "Nicolás",
-          surnames = "Canul Ibarra",
-          enrolment = "15001169",
-          gradePointAverage = 80.3
+          nombres = "Nicolás",
+          apellidos = "Canul Ibarra",
+          matricula = "15001169",
+          promedio = 80.3
         )
 
         val updatedStudent = underTest.updateStudent(oldStudentId, newStudent)
 
-        updatedStudent.surnames shouldBe newStudent.surnames
-        updatedStudent.gradePointAverage shouldBe newStudent.gradePointAverage
+        updatedStudent.apellidos shouldBe newStudent.apellidos
+        updatedStudent.promedio shouldBe newStudent.promedio
       }
 
       should("throw an exception if student to update is not found") {
         val updatedStudent = Student(
           id = Long.MAX_VALUE,
-          names = "Eusebio",
-          surnames = "Do Santos",
-          enrolment = "15001189",
-          gradePointAverage = 89.34
+          nombres = "Eusebio",
+          apellidos = "Do Santos",
+          matricula = "15001189",
+          promedio = 89.34
         )
         val studentId = updatedStudent.id
 

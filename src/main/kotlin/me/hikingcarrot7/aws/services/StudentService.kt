@@ -27,10 +27,10 @@ class StudentService constructor(
 
   fun updateStudent(studentId: Long, updatedStudent: Student): Student {
     val oldStudent = getStudentById(studentId)
-    oldStudent.names = updatedStudent.names
-    oldStudent.surnames = updatedStudent.surnames
-    oldStudent.enrolment = updatedStudent.enrolment
-    oldStudent.gradePointAverage = updatedStudent.gradePointAverage
+    oldStudent.nombres = updatedStudent.nombres
+    oldStudent.apellidos = updatedStudent.apellidos
+    oldStudent.matricula = updatedStudent.matricula
+    oldStudent.promedio = updatedStudent.promedio
     return studentRepository.save(oldStudent)
   }
 

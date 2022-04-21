@@ -28,6 +28,7 @@ class TeacherController constructor(val teacherService: TeacherService) {
 
   @PostMapping
   fun saveTeacher(@RequestBody @Valid teacher: Teacher): ResponseEntity<Teacher> {
+    println(teacher)
     val savedTeacher = teacherService.saveTeacher(teacher)
     return ResponseEntity
       .created(URI("${BASE_URL}/${savedTeacher.id}"))

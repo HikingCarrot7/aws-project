@@ -45,7 +45,7 @@ internal class StudentControllerTest(
           .andExpect(status().isOk)
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.length()", `is`(2)))
-          .andExpect(jsonPath("$[0].names").value("Nicolás"))
+          .andExpect(jsonPath("$[0].nombres").value("Nicolás"))
       }
     }
 
@@ -61,7 +61,7 @@ internal class StudentControllerTest(
           .andExpect(status().isOk)
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath<List<*>>("$.*", hasSize(5)))
-          .andExpect(jsonPath("$.names").value("Nicolás"))
+          .andExpect(jsonPath("$.nombres").value("Nicolás"))
       }
 
       should("return 404 status code if student not found") {
@@ -91,7 +91,7 @@ internal class StudentControllerTest(
           )
           .andExpect(status().isCreated)
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-          .andExpect(jsonPath("$.names").value(newStudent.names))
+          .andExpect(jsonPath("$.nombres").value(newStudent.nombres))
           .andExpect(header().string("Location", resourceLocation))
       }
 
@@ -128,8 +128,8 @@ internal class StudentControllerTest(
           )
           .andExpect(status().isOk)
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-          .andExpect(jsonPath("$.names").value("Eusebio"))
-          .andExpect(jsonPath("$.surnames").value("Santos"))
+          .andExpect(jsonPath("$.nombres").value("Eusebio"))
+          .andExpect(jsonPath("$.apellidos").value("Santos"))
         studentIdSlot.captured shouldBe updateStudentId
       }
 
@@ -176,8 +176,8 @@ internal class StudentControllerTest(
         mockMvc
           .perform(delete(url))
           .andExpect(status().isOk)
-          .andExpect(jsonPath("$.names").value(studentToDelete.names))
-          .andExpect(jsonPath("$.surnames").value(studentToDelete.surnames))
+          .andExpect(jsonPath("$.nombres").value(studentToDelete.nombres))
+          .andExpect(jsonPath("$.apellidos").value(studentToDelete.apellidos))
       }
 
       should("return 404 status code when student to delete is not found") {

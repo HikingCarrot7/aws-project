@@ -15,10 +15,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 internal class TeacherServiceTest(
   private val teacherRepository: TeacherRepository
 ) : ShouldSpec() {
-  private lateinit var underTest: TeacherService;
+  private lateinit var underTest: TeacherService
   private var teachersWithinDatabase = listOf(
-    Teacher(1, "Jorge", "Montalvo", 40),
-    Teacher(2, "Eusebio", "Ajax Santos", 80)
+    Teacher(1, 100, "Jorge", "Montalvo", 40),
+    Teacher(2, 200, "Eusebio", "Ajax Santos", 80)
   )
 
   override fun extensions() = listOf(SpringExtension)
@@ -57,19 +57,20 @@ internal class TeacherServiceTest(
     }
 
     context("#saveTeacher") {
-      should("return saved teacher with a valid id and original fields") {
+      should("return saved teacher with original fields") {
         val newTeacher = Teacher(
-          names = "Ricardo Nicolás",
-          surnames = "Canul Ibarra",
-          employeeNumber = 1127318,
-          classHours = 40
+          id = 3,
+          numeroEmpleado = 1127318,
+          nombres = "Ricardo Nicolás",
+          apellidos = "Canul Ibarra",
+          horasClase = 40
         )
 
         val savedTeacher = underTest.saveTeacher(newTeacher)
 
         savedTeacher.id shouldBeGreaterThan 0L
-        savedTeacher.names shouldBe newTeacher.names
-        savedTeacher.surnames shouldBe newTeacher.surnames
+        savedTeacher.nombres shouldBe newTeacher.nombres
+        savedTeacher.apellidos shouldBe newTeacher.apellidos
       }
     }
 
@@ -78,24 +79,26 @@ internal class TeacherServiceTest(
         val oldTeacher = teachersWithinDatabase.last()
         val oldTeacherId = oldTeacher.id
         val newTeacher = Teacher(
-          names = "Víctor",
-          surnames = "Ajax Santos",
-          employeeNumber = 2,
-          classHours = 60
+          id = 2,
+          numeroEmpleado = 200,
+          nombres = "Víctor",
+          apellidos = "Ajax Santos",
+          horasClase = 60
         )
 
         val updatedTeacher = underTest.updateTeacher(oldTeacherId, newTeacher)
 
-        updatedTeacher.names shouldBe newTeacher.names
-        updatedTeacher.classHours shouldBe newTeacher.classHours
+        updatedTeacher.nombres shouldBe newTeacher.nombres
+        updatedTeacher.horasClase shouldBe newTeacher.horasClase
       }
 
       should("throw an exception if teacher to update is not found") {
         val updatedTeacher = Teacher(
-          names = "Eusebio",
-          surnames = "Do Santos",
-          employeeNumber = 5,
-          classHours = 60,
+          id = 5,
+          numeroEmpleado = 500,
+          nombres = "Eusebio",
+          apellidos = "Do Santos",
+          horasClase = 60,
         )
         val updatedTeacherId = Long.MAX_VALUE
         assertThrows<TeacherNotFoundException> {

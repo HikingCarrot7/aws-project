@@ -31,8 +31,8 @@ internal class TeacherControllerTest(
       teachersWithinDatabase.clear()
       teachersWithinDatabase.addAll(
         listOf(
-          Teacher(1, "Jorge", "Montalvo", 40),
-          Teacher(2, "Eusebio", "Ajax Santos", 80)
+          Teacher(1, 100, "Jorge", "Montalvo", 40),
+          Teacher(2, 200, "Eusebio", "Ajax Santos", 80)
         )
       )
     }
@@ -46,7 +46,7 @@ internal class TeacherControllerTest(
           .andExpect(status().isOk)
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.length()", `is`(2)))
-          .andExpect(jsonPath("$[0].names").value("Jorge"))
+          .andExpect(jsonPath("$[0].nombres").value("Jorge"))
       }
     }
 
@@ -62,7 +62,7 @@ internal class TeacherControllerTest(
           .andExpect(status().isOk)
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath<List<*>>("$.*", hasSize(5)))
-          .andExpect(jsonPath("$.names").value("Jorge"))
+          .andExpect(jsonPath("$.nombres").value("Jorge"))
       }
 
       should("return 404 status code if teacher not found") {
@@ -80,7 +80,7 @@ internal class TeacherControllerTest(
 
     context("POST - Save teacher") {
       should("return saved teacher & 201 status code") {
-        val newTeacher = Teacher(3, "Víctor", "Cauich", 40)
+        val newTeacher = Teacher(3, 300, "Víctor", "Cauich", 40)
         val resourceLocation = "${TeacherController.BASE_URL}/${newTeacher.id}"
         every { teacherService.saveTeacher(any()) } returns newTeacher
 
@@ -92,12 +92,12 @@ internal class TeacherControllerTest(
           )
           .andExpect(status().isCreated)
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-          .andExpect(jsonPath("$.names").value(newTeacher.names))
+          .andExpect(jsonPath("$.nombres").value(newTeacher.nombres))
           .andExpect(header().string("Location", resourceLocation))
       }
 
       xshould("return 400 status code when invalid fields") {
-        val newTeacher = Teacher(5, "Ni", "Ca", -30)
+        val newTeacher = Teacher(5, 500, "Ni", "Ca", -30)
         mockMvc.perform(
           post(TeacherController.BASE_URL)
             .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +111,7 @@ internal class TeacherControllerTest(
 
     context("PUT - Update teacher") {
       should("return updated teacher & 200 status code") {
-        val updatedTeacher = Teacher(5, "Eusebio", "Ajax Santos", 60)
+        val updatedTeacher = Teacher(5, 500, "Eusebio", "Ajax Santos", 60)
         val updatedTeacherId = updatedTeacher.id
         val url = "${TeacherController.BASE_URL}/$updatedTeacherId"
         val studentIdSlot = slot<Long>()
@@ -127,13 +127,13 @@ internal class TeacherControllerTest(
           )
           .andExpect(status().isOk)
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-          .andExpect(jsonPath("$.names").value("Eusebio"))
-          .andExpect(jsonPath("$.surnames").value("Ajax Santos"))
+          .andExpect(jsonPath("$.nombres").value("Eusebio"))
+          .andExpect(jsonPath("$.apellidos").value("Ajax Santos"))
         studentIdSlot.captured shouldBe updatedTeacherId
       }
 
       xshould("return 400 status code when invalid fields") {
-        val updatedTeacher = Teacher(5, "Eu", "Ajax Santos", -60)
+        val updatedTeacher = Teacher(5, 500, "Eu", "Ajax Santos", -60)
         val url = "${TeacherController.BASE_URL}/${updatedTeacher.id}"
 
         mockMvc
@@ -148,7 +148,7 @@ internal class TeacherControllerTest(
       }
 
       should("return 400 status code when teacher to update not found") {
-        val updatedTeacher = Teacher(5, "Eusebio", "Ajax Santos", 60)
+        val updatedTeacher = Teacher(5, 500, "Eusebio", "Ajax Santos", 60)
         val updateTeacherId = updatedTeacher.id
         val url = "${TeacherController.BASE_URL}/$updateTeacherId"
         every {
@@ -175,12 +175,12 @@ internal class TeacherControllerTest(
         mockMvc
           .perform(delete(url))
           .andExpect(status().isOk)
-          .andExpect(jsonPath("$.names").value(teacherToDelete.names))
-          .andExpect(jsonPath("$.surnames").value(teacherToDelete.surnames))
+          .andExpect(jsonPath("$.nombres").value(teacherToDelete.nombres))
+          .andExpect(jsonPath("$.apellidos").value(teacherToDelete.apellidos))
       }
 
       should("return 404 status code when teacher to delete is not found") {
-        val teacherToDelete = Teacher(5, "Eusebio", "Ajax Santos", 60)
+        val teacherToDelete = Teacher(8, 800, "Eusebio", "Ajax Santos", 60)
         val teacherToDeleteId = teacherToDelete.id
         val url = "${TeacherController.BASE_URL}/$teacherToDeleteId"
         every {

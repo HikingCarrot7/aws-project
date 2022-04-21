@@ -25,10 +25,10 @@ class TeacherService constructor(val teacherRepository: TeacherRepository) {
 
   fun updateTeacher(teacherId: Long, newTeacher: Teacher): Teacher {
     val oldTeacher = getTeacherById(teacherId)
-    oldTeacher.employeeNumber = newTeacher.employeeNumber
-    oldTeacher.names = newTeacher.names
-    oldTeacher.surnames = newTeacher.surnames
-    oldTeacher.classHours = newTeacher.classHours
+    oldTeacher.numeroEmpleado = newTeacher.numeroEmpleado
+    oldTeacher.nombres = newTeacher.nombres
+    oldTeacher.apellidos = newTeacher.apellidos
+    oldTeacher.horasClase = newTeacher.horasClase
     return teacherRepository.save(oldTeacher)
   }
 
