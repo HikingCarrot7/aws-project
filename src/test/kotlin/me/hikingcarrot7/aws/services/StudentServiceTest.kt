@@ -92,7 +92,7 @@ internal class StudentServiceTest(
         updatedStudent.gradePointAverage shouldBe newStudent.gradePointAverage
       }
 
-      should("throw exception if student to update is not found") {
+      should("throw an exception if student to update is not found") {
         val updatedStudent = Student(
           id = Long.MAX_VALUE,
           names = "Eusebio",
