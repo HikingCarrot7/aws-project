@@ -1,8 +1,8 @@
 package me.hikingcarrot7.aws.services
 
-import me.hikingcarrot7.aws.errors.TeacherNotFoundException
 import me.hikingcarrot7.aws.models.Teacher
 import me.hikingcarrot7.aws.repositories.TeacherRepository
+import me.hikingcarrot7.aws.services.exceptions.TeacherNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 

@@ -5,9 +5,9 @@ import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
-import me.hikingcarrot7.aws.errors.StudentNotFoundException
 import me.hikingcarrot7.aws.models.Student
 import me.hikingcarrot7.aws.repositories.StudentRepository
+import me.hikingcarrot7.aws.services.exceptions.StudentNotFoundException
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
@@ -47,7 +47,7 @@ internal class StudentServiceTest(
         student shouldBe expectedStudent
       }
 
-      should("throw exception if student is not found") {
+      should("throw an exception if student is not found") {
         val studentId = Long.MAX_VALUE
 
         assertThrows<StudentNotFoundException> {
@@ -120,7 +120,7 @@ internal class StudentServiceTest(
         studentRepository.count() shouldBe totalStudents - 1
       }
 
-      should("throw exception if student to delete is not found") {
+      should("throw an exception if student to delete is not found") {
         val studentToDeleteId = Long.MAX_VALUE
 
         assertThrows<StudentNotFoundException> {

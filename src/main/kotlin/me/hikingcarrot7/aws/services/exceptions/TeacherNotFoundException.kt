@@ -1,4 +1,4 @@
-package me.hikingcarrot7.aws.errors
+package me.hikingcarrot7.aws.services.exceptions
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus

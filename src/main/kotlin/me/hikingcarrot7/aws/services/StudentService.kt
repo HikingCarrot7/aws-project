@@ -1,8 +1,8 @@
 package me.hikingcarrot7.aws.services
 
-import me.hikingcarrot7.aws.errors.StudentNotFoundException
 import me.hikingcarrot7.aws.models.Student
 import me.hikingcarrot7.aws.repositories.StudentRepository
+import me.hikingcarrot7.aws.services.exceptions.StudentNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 

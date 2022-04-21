@@ -5,9 +5,9 @@ import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
-import me.hikingcarrot7.aws.errors.TeacherNotFoundException
 import me.hikingcarrot7.aws.models.Teacher
 import me.hikingcarrot7.aws.repositories.TeacherRepository
+import me.hikingcarrot7.aws.services.exceptions.TeacherNotFoundException
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
@@ -125,5 +125,4 @@ internal class TeacherServiceTest(
       }
     }
   }
-
 }
