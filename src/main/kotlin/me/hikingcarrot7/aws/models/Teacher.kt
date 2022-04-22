@@ -37,7 +37,7 @@ class Teacher() {
   lateinit var apellidos: String
 
   @Column
-  @Min(1, message = "El número de horas de clases debe ser mayor a 1")
+  @Min(0, message = "El número de horas de clases debe ser positivo")
   var horasClase: Int = Int.MIN_VALUE
 
   constructor(
