@@ -1,19 +1,15 @@
 package me.hikingcarrot7.aws.models
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.Positive
 import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "teachers")
 class Teacher() {
   @Id
-  @Positive(message = "Debe especificarse un identificador válido para el maestro")
+  @GeneratedValue
   var id = Long.MIN_VALUE
 
   @Column

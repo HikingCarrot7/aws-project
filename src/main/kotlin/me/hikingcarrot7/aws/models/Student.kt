@@ -1,16 +1,16 @@
 package me.hikingcarrot7.aws.models
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
-import javax.validation.constraints.*
+import javax.persistence.*
+import javax.validation.constraints.DecimalMax
+import javax.validation.constraints.DecimalMin
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "students")
 class Student() {
   @Id
-  @PositiveOrZero(message = "Debe especificarse un identificador válido para el alumno")
+  @GeneratedValue
   var id = Long.MIN_VALUE
 
   @Column
@@ -28,6 +28,9 @@ class Student() {
     message = "Los apellidos deben tener un mínimo de 5 caracteres"
   )
   var apellidos: String = ""
+
+  @Column
+  var fotoPerfilUrl: String = ""
 
   @Column
   @NotEmpty

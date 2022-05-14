@@ -34,6 +34,14 @@ class StudentService constructor(
     return studentRepository.save(oldStudent)
   }
 
+  fun updateStudentProfilePhoto(
+    studentId: Long, profilePhotoUrl: String
+  ): Student {
+    val student = getStudentById(studentId)
+    student.fotoPerfilUrl = profilePhotoUrl
+    return saveStudent(student)
+  }
+
   fun deleteStudent(studentId: Long): Student {
     val student = getStudentById(studentId)
     studentRepository.delete(student)
